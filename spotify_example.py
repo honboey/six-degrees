@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 import os
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
+import json
 
 load_dotenv()
 
@@ -21,3 +22,5 @@ while results['next']:
 
 for album in albums:
     print(album['name'])
+
+print(json.dumps(spotify.track("119c93MHjrDLJTApCVGpvx")["artists"], indent=2))
