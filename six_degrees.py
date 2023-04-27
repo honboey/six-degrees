@@ -46,7 +46,7 @@ def six_degrees_game():
 
 # Str -> Array, Str
 def reveal_song_and_artists(song_name, artist_name):
-    song_details = spotify.search(q=f"{song_name} {artist_name}", limit=1, type="track")
+    song_details = spotify.search(q=f"remaster%20track:{song_name}%20artist:{artist_name}", limit=1, type="track")
     artists = song_details["tracks"]["items"][0]["artists"]
     track_name = song_details["tracks"]["items"][0]["name"]
     return artists, track_name
