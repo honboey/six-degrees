@@ -47,4 +47,6 @@ def six_degrees_game():
 # Str -> Str
 def reveal_song_and_artists(song_name, artist_name):
     song_details = spotify.search(q=f"{song_name} {artist_name}", limit=1, type="track")
-    return song_details["tracks"]["items"][0]["name"]
+    artists = song_details["tracks"]["items"][0]["artists"]
+    track_name = song_details["tracks"]["items"][0]["name"]
+    
