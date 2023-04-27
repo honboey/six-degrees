@@ -42,11 +42,12 @@ def six_degrees_game():
     print(second_artist_name)
     for i in range(6):
         song_input = print(input(f"{i}. Choose a song: "))
-        print(reveal_song_and_artists(song_input, first_artist_name))
+        artists, track_name = (reveal_song_and_artists(song_input, first_artist_name))
 
-# Str -> Str
+# Str -> Array, Str
 def reveal_song_and_artists(song_name, artist_name):
     song_details = spotify.search(q=f"{song_name} {artist_name}", limit=1, type="track")
     artists = song_details["tracks"]["items"][0]["artists"]
     track_name = song_details["tracks"]["items"][0]["name"]
+    return artists, track_name
     
