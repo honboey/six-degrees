@@ -18,7 +18,7 @@ spotify = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
 # Data
 
-artist_list = json.load(open("rapper-list.json"))
+artist_list = json.load(open("data/rapper-list.json"))
 first_artist_name = random.choice(artist_list)
 second_artist_name = random.choice(artist_list)
 
@@ -42,22 +42,37 @@ def six_degrees_game():
     print(f"Start at: {first_artist_name}")
     print(f"Finish at: {second_artist_name}")
     for i in range(6):
-        song_input = input(f"Song {i + 1}. Choose a song: ")
-        print("song_input", song_input)
-        artists, track_name = reveal_song_and_artists(song_input, first_artist_name)
+        song_name = input(f"Song {i + 1}: ")
+        artist_name = input(f"Artist: ")
+        # TODO: check that the artist is in the previous song choice
+        if artist_is_valid(artist_name, list_of_artists):
+            song_name, artist_name = reveal_song_and_artists(song_name, artist_name)
+        else:
+            # go back to ask for artist_name
+            pass
+        print(f"{song_name} by {artist_name}")
 
 
 # Str -> Array, Str
+# Given a song name and an artist, search the SPotify API and return the song name and a lists of artists
 def reveal_song_and_artists(song_name, artist_name):
-    print("song_name", song_name)
-    print("search", f"remaster%20track:{song_name} {artist_name}")
-    song_details = spotify.search(
-        q=f"remaster%20track:{song_name} {artist_name}", limit=1, type="track"
-    )
-    artists = song_details["tracks"]["items"][0]["artists"]
+    song_details = spotify.search(q=f"{song_name} {artist_name}", limit=1, type="track")
     track_name = song_details["tracks"]["items"][0]["name"]
-    print(track_name, artists)
-    return artists, track_name
+    artists = create_list_of_artists(song_details["tracks"]["items"][0]["artists"])
+    return track_name, artists
 
 
-six_degrees_game()
+# Array -> Array
+def create_list_of_artists(raw_list_of_artists):
+    list_of_artists = []
+    for i in range(len(raw_list_of_artists)):
+        list_of_artists.append(raw_list_of_artists[i]["name"])
+    return list_of_artists
+
+
+# Str, Array -> Boolean
+def artist_is_valid(artist_name, list_of_artists):
+    return artist_name in list_of_artists
+
+
+# six_degrees_game()
