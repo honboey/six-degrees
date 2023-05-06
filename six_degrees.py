@@ -42,19 +42,40 @@ def six_degrees_game():
     print(f"Start at: {first_artist_name}")
     print(f"Finish at: {second_artist_name}")
     for i in range(6):
-        song_name = input(f"Song {i + 1}: ")
-        artist_name = input(f"Artist: ")
-        # TODO: check that the artist is in the previous song choice
-        if artist_is_valid(artist_name, list_of_artists):
-            song_name, artist_name = reveal_song_and_artists(song_name, artist_name)
+        if i == 0:            
+            while True:                
+                song_name = input(f"Song {i + 1}: ")
+                artist_name = input(f"Artist: ")                
+                track_name, artists = reveal_song_and_artists(song_name, artist_name)
+                print(track_name, artists)
+                if artist_is_valid(first_artist_name, artists):
+                    print(f"{song_name} by {artist_name} is valid")
+                    break
+                else:
+                    print(f"{first_artist_name} does not feature on {song_name}. Please choose another track")
+        elif 0 < i < 6:
+            while True:                
+                song_name = input(f"Song {i + 1}: ")
+                artist_name = input(f"Artist: ")
+                track_name, artists = reveal_song_and_artists(song_name, artist_name)        
+                if artist_is_valid(first_artist_name, artists):
+                    print(f"{song_name} by {artist_name} is valid")
+                    break
+                else:
+                    print(f"{first_artist_name} does not feature on {song_name}. Please choose another track")
         else:
-            # go back to ask for artist_name
-            pass
-        print(f"{song_name} by {artist_name}")
-
+           while True:                
+                song_name = input(f"Song {i + 1}: ")
+                artist_name = input(f"Artist: ")
+                track_name, artists = reveal_song_and_artists(song_name, artist_name)        
+                if artist_is_valid(second_artist_name, artists):
+                    print(f"{song_name} by {artist_name} is valid")
+                    break
+                else:
+                    print(f"{first_artist_name} does not feature on {song_name}. Please choose another track")
 
 # Str -> Array, Str
-# Given a song name and an artist, search the SPotify API and return the song name and a lists of artists
+# Given a song name and an artist, search the Spotify API and return the song name and a lists of artists
 def reveal_song_and_artists(song_name, artist_name):
     song_details = spotify.search(q=f"{song_name} {artist_name}", limit=1, type="track")
     track_name = song_details["tracks"]["items"][0]["name"]
@@ -70,9 +91,10 @@ def create_list_of_artists(raw_list_of_artists):
     return list_of_artists
 
 
+# TODO Rather than check if an artist is in a list, get two lists of artists and check to see if one of the artists from the first list is in the second list
 # Str, Array -> Boolean
 def artist_is_valid(artist_name, list_of_artists):
     return artist_name in list_of_artists
 
 
-# six_degrees_game()
+six_degrees_game()
